@@ -8,14 +8,15 @@
 package main
 
 import (
-	"bufio"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"os"
+	"time"
 )
 
 func main() {
+	start := time.Now()
 	fmt.Println("Loadind...")
 	const prefix string = "https://"
 	for _, url := range os.Args[1:] {
@@ -24,19 +25,19 @@ func main() {
 			fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
 			os.Exit(1)
 		}
-		b, err := ioutil.ReadAll(resp.Body) // read the answer
-		resp.Body.Close()
-		if err != nil {
-			fmt.Fprintf(os.Stderr, "fetch: reading %s: %v", url, err)
-			os.Exit(1)
-		}
 		f, err := os.Create("answer.html") // create a file
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "fetch: %v\n", err)
 			os.Exit(1)
 		}
-		w := bufio.NewWriter(f)
-		w.Write([]byte(b)) // put data into th file
+		nbytes, err := io.Copy(f, resp.Body) // copy the answer
+		resp.Body.Close()
+		if err != nil {
+			fmt.Fprintf(os.Stderr, "fetch: reading %s: %v", url, err)
+			os.Exit(1)
+		}
+		sec := time.Since(start).Seconds()
 		fmt.Println("Success!")
+		fmt.Printf("%s copied\n%v bytes (%fs)\n", url, nbytes, sec)
 	}
 }
