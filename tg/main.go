@@ -11,7 +11,7 @@ import (
 
 const (
 	BotToken   = "" // your tg token
-	WebhookURL = "" // your ngrok or etc.
+	WebhookURL = "" // your ngrok
 )
 
 var rss = map[string]string{
