@@ -1,4 +1,4 @@
-// Feed Telegram Bot 
+// Feed Telegram Bot
 // https://habr.com/ru/rss/best/daily/?fl=ru              - лучшее за день по всем темам
 // https://www.opennet.ru/opennews/opennews_all_utf.rss   - rss от opennet
 
@@ -21,7 +21,7 @@ import (
 
 func main() {
 	bot, err := tb.NewBot(tb.Settings{
-		Token:  "YOUR_TOKEN", // telegram bot token 
+		Token:  "YOUR_TOKEN", // telegram bot token
 		Poller: &tb.LongPoller{Timeout: 10 * time.Second},
 	})
 	if err != nil {
@@ -29,11 +29,12 @@ func main() {
 	}
 
 	//b.Handle("Hello!", func(m *tb.Message) {
-	//	b.Send(m.Sender, "Hi!")
+	//b.Send(m.Sender, "Hi!")
 	//})
 	bot.Handle("/getHabr", func(m *tb.Message) {
 		fmt.Println("Loadind...")
 		fp := gofeed.NewParser()
+
 		feed, _ := fp.ParseURL("https://habr.com/ru/rss/best/daily/?fl=ru")
 		for i, v := range feed.Items {
 			if i < 10 {
@@ -41,15 +42,14 @@ func main() {
 				strOneNotFullFix, strOneFullFix := "", ""
 				strTwoNotFullFix, strTwoFullFix := "", ""
 
-				bTitle, _ := xml.Marshal(v.Title)
-				strOneNotFullFix += strings.ReplaceAll(string(bTitle), "<string>", "")
+				strOneNotFullFix += strings.ReplaceAll(v.Title, "<string>", "")
 				strOneFullFix += strings.ReplaceAll(strOneNotFullFix, "</string>", "")
 				str += strOneNotFullFix + "\t\t\t\n"
 
-				bLink, _ := xml.Marshal(v.Link)
-				strTwoNotFullFix += strings.ReplaceAll(string(bLink), "<string>", "")
+				strTwoNotFullFix += strings.ReplaceAll(v.Link, "<string>", "")
 				strTwoFullFix += strings.ReplaceAll(strTwoNotFullFix, "</string>", "")
 				str += strTwoFullFix + "\t\t\t\n"
+
 				bot.Send(m.Sender, str)
 			}
 		}
@@ -80,13 +80,13 @@ func main() {
 		fmt.Println("Success!")
 	})
 	bot.Handle(tb.OnText, func(m *tb.Message) {
-		bot.Send(m.Sender, "If you would like to receive the news, \nplease type \"/getOpennet\" or \"/getHabr\"")
+		bot.Send(m.Sender, "If you would like to receive the news, \nplease type \"/getOpenNet\" or \"/getHabr\"")
 		bot.Send(m.Sender, "Thanks!")
 
 	})
 	bot.Handle("Hi!", func(m *tb.Message) {
 		bot.Send(m.Sender, "Hi!")
-		bot.Send(m.Sender, "If you would like to receive the news, \nplease type \"/getOpennet\" or \"/getHabr\"")
+		bot.Send(m.Sender, "If you would like to receive the news, \nplease type \"/getOpenNet\" or \"/getHabr\"")
 		bot.Send(m.Sender, "Thanks!")
 	})
 	bot.Handle("What is your name?", func(m *tb.Message) {
