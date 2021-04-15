@@ -1,4 +1,4 @@
-// Feed Telegram Bot
+// FeedMeNews Telegram Bot
 // https://habr.com/ru/rss/best/daily/?fl=ru              - лучшее за день по всем темам
 // https://www.opennet.ru/opennews/opennews_all_utf.rss   - rss от opennet
 
