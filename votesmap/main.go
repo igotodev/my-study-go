@@ -20,12 +20,15 @@ func main() {
 	}
 	names := make(map[string]int)
 	for _, line := range lines {
+		/*
 		_, ok := names[line]
 		if !ok {
 			names[line] = 1
 		} else {
 			names[line]++
 		}
+		*/
+		names[line]++
 	}
 	value := make([]int, 0, len(names))
 	for _, v := range names {
